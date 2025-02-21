@@ -19,14 +19,29 @@ const COMPONENTS = {
 };
 
 export const loader: LoaderFunction = async ({ params }) => {
-  const step = Number(params.step);
-  if (step !== 2 && step !== 3) {
-    return redirect('/');
+  const step = Number(params.step) || 1;
+
+  let config;
+  try {
+    const response = await api.getConfig();
+    config = response?.data || [];
+  } catch (error) {
+    console.error('Error fetching config:', error);
+    config = [];
   }
 
-  const { data: config } = await api.getConfig();
+  // Hardcoded fallback if config is empty
+  if (config.length === 0) {
+    config = [
+      { component_name: 'about_me', page_number: 2 },
+      { component_name: 'address', page_number: 2 },
+      { component_name: 'birthdate', page_number: 3 },
+    ];
+  }
+
   return json({ config, step });
 };
+
 
 export const action: ActionFunction = async ({ request, params }) => {
     try {
