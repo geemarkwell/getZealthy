@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:3000';
+const API_BASE = 'https://getzealthy-production.up.railway.app';
 
 export const api = {
   // User onboarding
